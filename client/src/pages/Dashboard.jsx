@@ -20,7 +20,7 @@ function Dashboard() {
 
     const fetchIssues = async () => {
         try {
-            const res = await axios.get("http://localhost:5000/api/issues");
+            const res = await axios.get("https://amiable-luck-production-e7d8.up.railway.app/api/issues");
             setIssues(res.data);
         } catch (error) {
             console.log(error);
@@ -28,14 +28,15 @@ function Dashboard() {
     };
     const total = issues.length;
 
-    const pending = issues.filter((issue) => issue.status === "pending").length;
+    const pending = issues.filter((issue) => issue.status === "Pending").length;
     const resolved = issues.filter((issue) => issue.status === "Resolved").length;
+    const user = JSON.parse(localStorage.getItem("user"));
 
     const chartData = {
         labels: ["pending", "Resolved"],
         datasets: [
             {
-                data: [pending,resolved],
+                data: [pending, resolved],
                 backgroundColor: [
                     "#ffc107",
                     "#198754",
@@ -45,10 +46,10 @@ function Dashboard() {
         ],
     };
 
-    return( 
+    return (
         <div className="container mt-5">
             <h2 className="text-center fw-bold text-primary mb-5">📊 Dashboard</h2>
-            <div className="row">
+            <div className="row g-4">
                 <div className="col-md-4 mb-4">
                     <div className="card text-center shadow p-4 bg-primary text-white">
                         <h3>📋 Total Complaints</h3>
@@ -67,19 +68,34 @@ function Dashboard() {
                         <h1 className="display-4 fw-bold">{resolved}</h1>
                     </div>
                 </div>
+                <div className="col-md-4 mb-4">
+                    <div className="card text-center shadow p-4 bg-info text-white">
+                        <h3>👤 Logged User</h3>
+                        <h5 className="mt-3">{user?.name}</h5>
+                        <p>{user?.email}</p>
+                    </div>
+                </div>
                 <div className="row mt-5">
                     <div className="col-md-6 mx-auto">
-                        <div className="card shadow p-4" style={{ height: "400px" }}>
+                        <div className="card shadow p-4" style={{ height: "360px" }}>
                             <h3 className="text-center mb-3">
                                 Complaint Status Chart
                             </h3>
-                            <Pie
-                                data={chartData}
-                                options={{
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                }}    
-                            />
+                            <div
+                                style={{
+                                    width: "250px",
+                                    height: "250px",
+                                    margin: "0 auto",
+                                }}
+                            >
+                                <Pie
+                                    data={chartData}
+                                    options={{
+                                        responsive: true,
+                                        maintainAspectRatio: true,
+                                    }}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -88,21 +104,25 @@ function Dashboard() {
                     <table className="table table-bordered table-hover">
                         <thead className="table-dark">
                             <tr>
+                                <th>Date</th>
                                 <th>Title</th>
                                 <th>Category</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {issues.slice(0,5).map((issue) => (
+                            {issues.slice(0, 5).map((issue) => (
                                 <tr key={issue._id}>
                                     <td>{issue.title}</td>
                                     <td>{issue.category}</td>
                                     <td>
-                                        <span className={`badge ${issue.status === "Resolved" ? "bg-success" : "bg-warning text-dark" }`}
+                                        <span className={`badge ${issue.status === "Resolved" ? "bg-success" : "bg-warning text-dark"}`}
                                         >
                                             {issue.status}
                                         </span>
+                                    </td>
+                                    <td>
+                                        {new Date(issue.createdAt).toLocaleDateString()}
                                     </td>
                                 </tr>
                             ))}

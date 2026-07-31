@@ -5,6 +5,8 @@ import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import EditIssue from "./pages/EditIssue";
+import AdminDashboard from "./pages/AdminDashboard";
+import IssueDetails from "./pages/IssueDetails";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -14,6 +16,7 @@ import ReportIssue from "./pages/ReportIssue";
 import MyComplaints from "./pages/MyComplaints";
 import Profile from "./pages/Profile";
 import ViewIssues from "./pages/ViewIssues";
+import ManageUsers from "./pages/ManageUsers";
 
 function App() {
   return(
@@ -30,10 +33,9 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/issues" element={<ViewIssues />} />
         <Route path="/edit/:id" element={<ProtectedRoute><EditIssue/></ProtectedRoute>}/>
-      </Routes>
-
-      <ToastContainer />
-    </>
+        <Route path="/admin" element={<ProtectedRoute><AdminDashboard/></ProtectedRoute>}/>
+        <Route path="/issue/:id" element={<ProtectedRoute><IssueDetails /></ProtectedRoute>}/>
+        <Route path="/manage-users"element={<ProtectedRoute><ManageUsers /></ProtectedRoute>}/></Routes><ToastContainer /></>
   );
 }
 

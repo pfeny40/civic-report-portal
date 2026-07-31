@@ -22,13 +22,21 @@ function EditIssue() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:5000/api/issues/${id}`, formData);
+            await axios.put(
+                `https://amiable-luck-production-e7d8.up.railway.app/api/issues/${id}`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
+            );
             toast.success("Complaint Updated Successfully!");
-            navigate("/issues");
+            navigate("/my-complaints");
         } catch (error) {
             console.log(error);
             console.log(error.response);
-        console.log(error.response?.data);    
+            console.log(error.response?.data);
             toast.error("Update Failed");
         }
     };
@@ -38,7 +46,7 @@ function EditIssue() {
     }, []);
     const fetchIssue = async () => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/issues/${id}`);
+            const res = await axios.get(`https://amiable-luck-production-e7d8.up.railway.app/api/issues/${id}`);
             setFormData(res.data);
         } catch (error) {
             console.log(error);

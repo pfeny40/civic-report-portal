@@ -1,10 +1,10 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-nav{
+nav {
     background: #0d6efd;
     color: white;
     display: flex;
@@ -14,19 +14,19 @@ nav{
     flex-wrap: wrap;
 }
 
-.logo{
+.logo {
     font-size: 28px;
     font-weight: bold;
 }
 
-.menu{
+.menu {
     display: flex;
     align-items: center;
     gap: 30px;
     flex-wrap: wrap;
 }
 
-.menu a{
+.menu a {
     color: white;
     text-decoration: none;
     font-size: 18px;
@@ -34,32 +34,60 @@ nav{
     transition: 0.3s;
 }
 
-.menu a:hover{
+.menu a:hover {
     color: #ffd43b;
 }
 
 /* mobile Responsive*/
-@media (max-width:768px){
-    nav{
+@media (max-width:768px) {
+    nav {
         flex-direction: column;
         padding: 20px;
     }
 
-    .logo{
+    .logo {
         margin-bottom: 15px;
         text-align: center;
         font-size: 24px;
     }
-    .menu{
+
+    .menu {
         width: 100%;
         flex-direction: column;
         gap: 15px;
     }
-    .menu a{
+
+    .menu a {
         font-size: 17px;
     }
-    .menu button{
+
+    .menu button {
         width: 100%;
         margin-left: 0;
+    }
+}
+
+.hamburger {
+    display: none;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+@media(max-width:768px) {
+
+    .hamburger {
+        display: block;
+        color: white;
+    }
+
+    .menu {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        margin-top: 20px;
+    }
+
+    .menu.active {
+        display: flex;
     }
 }

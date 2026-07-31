@@ -1,24 +1,25 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function ViewIssues() {
     const [issues, setIssues] = useState([]);
     const navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem("user"));
 
     useEffect(() => {
         fetchIssues();
     }, []);
 
     const [search, setSearch] = useState("");
-
     const [category, setCategory] = useState("");
+    const [statusFilter, setStatusFilter] = useState("All");
 
 
     const fetchIssues = async () => {
         try {
-            const res = await axios.get("http://localhost:5000/api/issues");
+            const res = await axios.get("https://amiable-luck-production-e7d8.up.railway.app/api/issues");
             setIssues(res.data);
         } catch (error) {
             console.log(error);
@@ -27,7 +28,14 @@ function ViewIssues() {
 
     const deleteIssue = async (id) => {
         try {
-            await axios.delete(`http://localhost:5000/api/issues/${id}`);
+            await axios.delete(
+                `https://amiable-luck-production-e7d8.up.railway.app/api/issues/${id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
+            );
             toast.success("Complaint Deleted Successfully!");
             fetchIssues();
         } catch (error) {
@@ -37,11 +45,23 @@ function ViewIssues() {
 
     const updateStatus = async (id) => {
         try {
-            await axios.put(`http://localhost:5000/api/issues/${id}/status`);
+            await axios.put(
+                `https://amiable-luck-production-e7d8.up.railway.app/api/issues/${id}/status`,
+                {
+                    status: "Resolved",
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
+            );
+
             toast.success("Status Updated!");
             fetchIssues();
         } catch (error) {
             console.log(error);
+            toast.error(error.response?.data?.message || "Failed to update status");
         }
     };
 
@@ -54,6 +74,17 @@ function ViewIssues() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
             />
+
+            <select
+                className="form-select mb-4"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+            >
+                <option value="All">All Complaints</option>
+                <option value="Pending">Pending</option>
+                <option value="Resolved">Resolved</option>
+            </select>
+
             <select
                 className="form-select mb-4"
                 value={category}
@@ -71,12 +102,12 @@ function ViewIssues() {
                 <h5 className="text-center">No Complaints Found</h5>
             ) : (
                 issues.filter((issue) => {
-                    const matchesSearch = 
-                issue.title.toLowerCase().includes(search.toLowerCase()) ||
-                issue.location.toLowerCase().includes(search.toLowerCase());
+                    const matchesSearch =
+                        issue.title.toLowerCase().includes(search.toLowerCase()) ||
+                        issue.location.toLowerCase().includes(search.toLowerCase());
                     const matchesCategory =
                         category === "" ||
-                issue.category === category;
+                        issue.category === category;
                     return matchesSearch && matchesCategory;
                 })
                     .map((issue) => (
@@ -87,11 +118,11 @@ function ViewIssues() {
                                     {issue.title}
                                 </h3>
                                 {issue.image && (
-                                    <img src= {`http://localhost:5000/uploads/${issue.image}`}
-                                    alt="Issue"
-                                    className="img-fluid rounded mb-3"
-                                    style={{ maxHeight: "250px" }}
-                                />
+                                    <img src={`https://amiable-luck-production-e7d8.up.railway.app/uploads/${issue.image}`}
+                                        alt="Issue"
+                                        className="img-fluid rounded mb-3"
+                                        style={{ maxHeight: "250px" }}
+                                    />
                                 )}
 
                                 <hr />
@@ -116,22 +147,37 @@ function ViewIssues() {
                                         {issue.status}
                                     </span>
                                 </p>
-
-                                <button className="btn btn-danger mt-2" onClick={() => deleteIssue(issue._id)}
+                                <button
+                                    className="btn btn-info btn-sm mt-2"
+                                    onClick={() => navigate(`/issue/${issue._id}`)}
                                 >
-                                    🗑️ Delete
+                                    👁 View Details
                                 </button>
 
-                                <button className="btn btn-success mt-2 ms-2" onClick={() => updateStatus(issue._id)}
-                                >
-                                    ✅ Mark as Resolved
-                                </button>
+                                {user?.role === "admin" && (
+                                    <button
+                                        className="btn btn-danger mt-2"
+                                        onClick={() => deleteIssue(issue._id)}
+                                    >
+                                        🗑 Delete
+                                    </button>
+                                )}
 
-                                <button 
-                                className="btn btn-success mt-2 ms-2"
-                                onClick={() => navigate(`/edit/${issue._id}`)}
+                                {user?.role === "admin" && (
+                                    <button
+                                        className="btn btn-success mt-2 ms-2"
+                                        onClick={() => updateStatus(issue._id)}
+                                    >
+                                        ✅ Mark as Resolved
+                                    </button>
+                                )}
+
+                                <button
+                                    className="btn btn-success mt-2 ms-2"
+                                    onClick={() => navigate(`/edit/${issue._id}`)}
                                 >
-                                     ✏️ Edit</button>
+                                    ✏️ Edit
+                                </button>
 
                                 <p className="text-muted">
                                     <small>

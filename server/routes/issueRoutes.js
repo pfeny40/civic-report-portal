@@ -1,49 +1,63 @@
-const express = require("express");
+import express from "express";
+import Issue from "../models/Issue.js";
+import upload from "../middleware/upload.js";
+import authMiddleware from "../middleware/authMiddleware.js";
+import adminMiddleware from "../middleware/adminMiddleware.js";
+
 const router = express.Router();
 
-const Issue = require("../models/Issue");
-const upload = require("../middleware/upload");
-
-//create new Issue
-router.post("/", upload.single("image"), async (req, res) => {
-    console.log("BODY:", req.body);
-    console.log ("FILE:", req.file);
-
+// ========================
+// Create New Issue
+// ========================
+router.post("/", authMiddleware, upload.single("image"), async (req, res) => {
     try {
         const issue = await Issue.create({
             title: req.body.title,
             category: req.body.category,
-            location:req.body.location,
+            location: req.body.location,
             description: req.body.description,
             userEmail: req.body.userEmail,
-            image: req.file ? req.file.filename: "",
+            image: req.file ? req.file.filename : "",
         });
 
         res.status(201).json(issue);
-    } catch(error) {
-        res.status(500).json({ message:error.message });
-    }
-    });
-router.get("/user/:email", async (req, res) => {
-    try {
-        const issue = await Issue.find({
-            userEmail: req.params.email,
-        }).sort({ createdAt: -1 });
-        res.json(issue);
     } catch (error) {
-        res.status(500).json({ message: error.message,});
+        res.status(500).json({
+            message: error.message,
+        });
     }
 });
 
-//get single Issue
+// ========================
+// Get Issues of Logged User
+// ========================
+router.get("/user/:email", async (req, res) => {
+    try {
+        const issues = await Issue.find({
+            userEmail: req.params.email,
+        }).sort({ createdAt: -1 });
+
+        res.json(issues);
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+});
+
+// ========================
+// Get Single Issue
+// ========================
 router.get("/:id", async (req, res) => {
     try {
         const issue = await Issue.findById(req.params.id);
+
         if (!issue) {
             return res.status(404).json({
                 message: "Issue not found",
             });
         }
+
         res.json(issue);
     } catch (error) {
         res.status(500).json({
@@ -52,60 +66,65 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-//bet all Issues
+// ========================
+// Get All Issues
+// ========================
 router.get("/", async (req, res) => {
     try {
-        const issues = await Issue.find().sort({ createdAt: -1 });
-        res.status(200).json(issues);
+        const issues = await Issue.find().sort({
+            createdAt: -1,
+        });
+
+        res.json(issues);
     } catch (error) {
-        console.log(error);
-res.status(500).json({ message: error.message });
+        res.status(500).json({
+            message: error.message,
+        });
     }
 });
 
-//delete issue
-router.delete("/:id", async (req, res) => {
-    try{
+// ========================
+// Delete Issue
+// ========================
+router.delete("/:id", authMiddleware, async (req, res) => {
+    try {
         await Issue.findByIdAndDelete(req.params.id);
-        res.json({ message: "Issue Deleted Successfully" });
+
+        res.json({
+            message: "Issue Deleted Successfully",
+        });
     } catch (error) {
-        console.log(error);
-res.status(500).json({ message: error.message });
+        res.status(500).json({
+            message: error.message,
+        });
     }
 });
 
-//Update Issue Status
-router.put("/:id", async (req, res) => {
+// ========================
+// Update Issue
+// ========================
+router.put("/:id", authMiddleware, async (req, res) => {
     try {
         const issue = await Issue.findById(req.params.id);
+
         if (!issue) {
-            return 
-res.status(404).json({ message: "Issue not found" });
+            return res.status(404).json({
+                message: "Issue not found",
+            });
         }
+
         issue.title = req.body.title;
         issue.category = req.body.category;
         issue.location = req.body.location;
         issue.description = req.body.description;
 
         await issue.save();
-        res.json({ mesaage: "Issue Updated Successfully", issue,});
-    } catch (error) {
-res.status(500).json({ message: error.message });
-    }
-});
 
-router.put("/:id/status", async (req, res) => {
-    try {
-        const issue = await Issue.findById(req.params.id);
-        if (!issue) {
-            return 
-res.status(404).json({
-    message: "Issue not found",
-});
-        }
-        issue.status = "Resolved";
-        await issue.save();
-        res.json(issue);
+        res.json({
+            message: "Issue Updated Successfully",
+            issue,
+        });
+
     } catch (error) {
         res.status(500).json({
             message: error.message,
@@ -113,4 +132,35 @@ res.status(404).json({
     }
 });
 
-    module.exports = router;
+// ========================
+// Update Status (Admin Only)
+// ========================
+router.put(
+    "/:id/status",
+    authMiddleware,
+    adminMiddleware,
+    async (req, res) => {
+        try {
+            const issue = await Issue.findById(req.params.id);
+
+            if (!issue) {
+                return res.status(404).json({
+                    message: "Issue not found",
+                });
+            }
+
+            issue.status = req.body.status;
+
+            await issue.save();
+
+            res.json(issue);
+
+        } catch (error) {
+            res.status(500).json({
+                message: error.message,
+            });
+        }
+    }
+);
+
+export default router;

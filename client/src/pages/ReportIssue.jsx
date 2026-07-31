@@ -31,7 +31,15 @@ function ReportIssue() {
             data.append("description", formData.description);
             data.append("image", image);
             data.append("userEmail", JSON.parse(localStorage.getItem("user")).email);
-            const response = await axios.post("http://localhost:5000/api/issues", data);
+            const response = await axios.post(
+                "https://amiable-luck-production-e7d8.up.railway.app/api/issues",
+                data,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
+            );
             toast.success("Complaint Submitted Successfully!");
             setFormData({
                 title: "",

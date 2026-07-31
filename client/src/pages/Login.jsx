@@ -21,15 +21,13 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post("http://localhost:5000/api/auth/login", formData);
-            console.log(res.data);
+            const res = await axios.post("https://amiable-luck-production-e7d8.up.railway.app/api/auth/login", formData);
             localStorage.setItem("token", res.data.token);
             localStorage.setItem("user",JSON.stringify(res.data.user));
-            console.log("USER =", localStorage.getItem("user"));
             toast.success("Login Successfully!");
             navigate("/dashboard");
         } catch (error) {
-            toast.error(error.responce?.data?.message || "Login Failed");
+            toast.error(error.response?.data?.message || "Login Failed");
         }
     };
     return (
