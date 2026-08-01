@@ -122,16 +122,18 @@ function Dashboard() {
                         <tbody>
                             {issues.slice(0, 5).map((issue) => (
                                 <tr key={issue._id}>
+                                    <td>{new Date(issue.createdAt).toLocaleDateString()}</td>
                                     <td>{issue.title}</td>
                                     <td>{issue.category}</td>
                                     <td>
-                                        <span className={`badge ${issue.status === "Resolved" ? "bg-success" : "bg-warning text-dark"}`}
+                                        <span
+                                            className={`badge ${issue.status === "Resolved"
+                                                    ? "bg-success"
+                                                    : "bg-warning text-dark"
+                                                }`}
                                         >
                                             {issue.status}
                                         </span>
-                                    </td>
-                                    <td>
-                                        {new Date(issue.createdAt).toLocaleDateString()}
                                     </td>
                                 </tr>
                             ))}
