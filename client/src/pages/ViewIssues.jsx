@@ -148,7 +148,7 @@ function ViewIssues() {
                                     </span>
                                 </p>
                                 <button
-                                    className="btn btn-info btn-sm mt-2"
+                                    className="btn btn-info btn-sm mt-2 me-2"
                                     onClick={() => navigate(`/issue/${issue._id}`)}
                                 >
                                     👁 View Details
@@ -156,7 +156,7 @@ function ViewIssues() {
 
                                 {user?.role === "admin" && (
                                     <button
-                                        className="btn btn-danger mt-2"
+                                        className="btn btn-danger btn-sm mt-2 me-2"
                                         onClick={() => deleteIssue(issue._id)}
                                     >
                                         🗑 Delete
@@ -165,19 +165,21 @@ function ViewIssues() {
 
                                 {user?.role === "admin" && (
                                     <button
-                                        className="btn btn-success mt-2 ms-2"
+                                        className="btn btn-success btn-sm mt-2 me-2"
                                         onClick={() => updateStatus(issue._id)}
                                     >
                                         ✅ Mark as Resolved
                                     </button>
                                 )}
 
-                                <button
-                                    className="btn btn-success mt-2 ms-2"
-                                    onClick={() => navigate(`/edit/${issue._id}`)}
-                                >
-                                    ✏️ Edit
-                                </button>
+                                {user?.role === "admin" && (
+                                    <button
+                                        className="btn btn-dark btn-sm mt-2"
+                                        onClick={() => navigate(`/edit/${issue._id}`)}
+                                    >
+                                        ✏️ Edit
+                                    </button>
+                                )}
 
                                 <p className="text-muted">
                                     <small>
