@@ -45,6 +45,15 @@ function Dashboard() {
             },
         ],
     };
+    if (user?.role !== "admin") {
+        return (
+            <div className="container mt-5 text-center">
+                <h2>Access Denied</h2>
+                <p>Only Admin can access Dashboard.</p>
+            </div>
+        );
+    }
+
 
     return (
         <div className="container mt-5">
