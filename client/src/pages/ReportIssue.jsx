@@ -102,7 +102,13 @@ function ReportIssue() {
                         rows="4"
                         placeholder="Describe the issue...."
                     ></textarea>
-                    <input type="file" className="form-control mb-3" onChange={(e) => setImage(e.target.files[0])} />
+                    <input
+                        type="file"
+                        accept="image/*"
+                        capture="environment"
+                        className="form-control mb-3"
+                        onChange={(e) => setImage(e.target.files[0])}
+                    />
                     <button
                         type="submit"
                         className="btn btn-danger w-100"
