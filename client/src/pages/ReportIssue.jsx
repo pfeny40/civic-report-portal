@@ -31,6 +31,7 @@ function ReportIssue() {
             data.append("description", formData.description);
             data.append("image", image);
             data.append("userEmail", JSON.parse(localStorage.getItem("user")).email);
+            console.log("TOKEN:", localStorage.getItem("token"));
             const response = await axios.post(
                 "https://amiable-luck-production-e7d8.up.railway.app/api/issues",
                 data,
