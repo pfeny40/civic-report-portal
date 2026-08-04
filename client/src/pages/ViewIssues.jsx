@@ -43,12 +43,12 @@ function ViewIssues() {
         }
     };
 
-    const updateStatus = async (id) => {
+    const updateStatus = async (id, status) => {
         try {
             await axios.put(
                 `https://amiable-luck-production-e7d8.up.railway.app/api/issues/${id}/status`,
                 {
-                    status: "Resolved",
+                    status,
                 },
                 {
                     headers: {
@@ -61,7 +61,7 @@ function ViewIssues() {
             fetchIssues();
         } catch (error) {
             console.log(error);
-            toast.error(error.response?.data?.message || "Failed to update status");
+            toast.error("Failed to update status");
         }
     };
 
@@ -164,12 +164,16 @@ function ViewIssues() {
                                 )}
 
                                 {user?.role === "admin" && (
-                                    <button
-                                        className="btn btn-success btn-sm mt-2 me-2"
-                                        onClick={() => updateStatus(issue._id)}
+                                    <select
+                                        className="form-select mt-2 mb-2"
+                                        value={issue.status}
+                                        onChange={(e) => updateStatus(issue._id, e.target.value)}
+                                        style={{ maxWidth: "220px" }}
                                     >
-                                        ✅ Mark as Resolved
-                                    </button>
+                                        <option value="Pending">Pending</option>
+                                        <option value="In Progress">In Progress</option>
+                                        <option value="Resolved">Resolved</option>
+                                    </select>
                                 )}
 
                                 {user?.role === "admin" && (
