@@ -123,7 +123,7 @@ function ViewIssues() {
                                 </h3>
                                 {issue.image && (
                                     <img src={`https://amiable-luck-production-e7d8.up.railway.app/uploads/${issue.image}`}
-                                        alt="Issue"
+                                        alt="issue"
                                         className="img-fluid rounded mb-3"
                                         style={{ maxHeight: "250px" }}
                                     />
