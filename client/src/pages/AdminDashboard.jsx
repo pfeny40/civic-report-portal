@@ -32,20 +32,27 @@ function AdminDashboard() {
 
     const updateStatus = async (id, status) => {
         try {
+            const token = localStorage.getItem("token");
 
             await axios.put(
                 `https://amiable-luck-production-e7d8.up.railway.app/api/issues/${id}/status`,
-                { status }
+                { status },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
             );
 
             toast.success("Status Updated");
-
             fetchIssues();
 
         } catch (error) {
-            console.log(error);
+            console.log(error.response?.data || error.message);
+            toast.error("Status Update Failed");
         }
     };
+
     const deleteIssue = async (id) => {
         if (!window.confirm("Delete this complaint?")) {
             return;
@@ -146,10 +153,10 @@ function AdminDashboard() {
                                 <td>
                                     <span
                                         className={`badge ${issue.status === "Pending"
-                                                ? "bg-warning text-dark"
-                                                : issue.status === "In Progress"
-                                                    ? "bg-primary"
-                                                    : "bg-success"
+                                            ? "bg-warning text-dark"
+                                            : issue.status === "In Progress"
+                                                ? "bg-primary"
+                                                : "bg-success"
                                             }`}
                                     >
                                         {issue.status}
