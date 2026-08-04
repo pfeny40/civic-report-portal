@@ -1,4 +1,7 @@
 const adminMiddleware = (req, res, next) => {
+    console.log("========== ADMIN ==========");
+    console.log(req.user);
+
     if (!req.user) {
         return res.status(401).json({
             message: "Unauthorized",

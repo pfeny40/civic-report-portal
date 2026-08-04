@@ -3,20 +3,20 @@ import User from "../models/User.js";
 
 const authMiddleware = async (req, res, next) => {
     try {
-        
+
+        console.log("========== AUTH ==========");
+        console.log("Authorization:", req.headers.authorization);
+
         const token = req.headers.authorization?.split(" ")[1];
-
-        console.log("Authorization Header:", req.headers.authorization);
-
-        if (!token) {
-            return res.status(401).json({
-                message: "Access Denied. No Token."
-            });
-        }
+        console.log("Token:", token);
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log("Decoded:", decoded);
 
-        req.user = await User.findById(decoded.id).select("-password");
+        const user = await User.findById(decoded.id).select("-password");
+        console.log("User Found:", user);
+
+        req.user = user;
 
         next();
 
