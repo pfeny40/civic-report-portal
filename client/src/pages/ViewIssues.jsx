@@ -44,6 +44,9 @@ function ViewIssues() {
     };
 
     const updateStatus = async (id, status) => {
+
+        console.log("TOKEN =", localStorage.getItem("token"));
+
         try {
             await axios.put(
                 `https://amiable-luck-production-e7d8.up.railway.app/api/issues/${id}/status`,
@@ -59,6 +62,7 @@ function ViewIssues() {
 
             toast.success("Status Updated!");
             fetchIssues();
+
         } catch (error) {
             console.log(error);
             toast.error("Failed to update status");
