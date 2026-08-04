@@ -21,7 +21,7 @@ router.post("/", authMiddleware, upload.single("image"), async (req, res) => {
             location: req.body.location,
             description: req.body.description,
             userEmail: req.body.userEmail,
-            image: req.file ? req.file.path : "",
+            image: req.file ? req.file.filename : "",
         });
 
         res.status(201).json(issue);
