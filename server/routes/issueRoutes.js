@@ -10,6 +10,10 @@ const router = express.Router();
 // Create New Issue
 // ========================
 router.post("/", authMiddleware, upload.single("image"), async (req, res) => {
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file);
+    console.log("HEADERS:", req.headers["content-type"]);
+
     try {
         const issue = await Issue.create({
             title: req.body.title,
