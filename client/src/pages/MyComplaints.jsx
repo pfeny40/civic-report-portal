@@ -101,9 +101,11 @@ function MyComplaints() {
                                         Date(issue.createdAt).toLocaleDateString()}
                                 </p>
                                 {issue.image && (
-                                    <img src={`https://amiable-luck-production-e7d8.up.railway.app/uploads/${issue.image}`}
+                                    <img
+                                        src={issue.image}
                                         alt="Issue"
-                                        className="img-fluid rounded mt-2" style={{ width: "250px " }}
+                                        className="img-fluid rounded mt-2"
+                                        style={{ width: "250px" }}
                                     />
                                 )}
 

@@ -33,10 +33,10 @@ function IssueDetails() {
 
                 {issue.image && (
                     <img
-                        src={`https://amiable-luck-production-e7d8.up.railway.app/uploads/${issue.image}`}
+                        src={issue.image}
                         alt="Issue"
-                        className="img-fluid rounded mb-4"
-                        style={{ maxHeight: "400px", objectFit: "cover" }}
+                        className="img-fluid rounded mt-2"
+                        style={{ width: "250px" }}
                     />
                 )}
 
@@ -51,13 +51,12 @@ function IssueDetails() {
                 <p>
                     <b>Status:</b>{" "}
                     <span
-                        className={`badge ${
-                            issue.status === "Pending"
+                        className={`badge ${issue.status === "Pending"
                                 ? "bg-warning text-dark"
                                 : issue.status === "In Progress"
-                                ? "bg-primary"
-                                : "bg-success"
-                        }`}
+                                    ? "bg-primary"
+                                    : "bg-success"
+                            }`}
                     >
                         {issue.status}
                     </span>
