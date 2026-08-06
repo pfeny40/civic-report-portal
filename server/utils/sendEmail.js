@@ -1,51 +1,39 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 10000,
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendComplaintEmail = async (issue) => {
     try {
 
-        console.log("Checking SMTP...");
-        await transporter.verify();
-        console.log("SMTP VERIFIED");
-
-        console.log("📧 Sending Email...");
-
-        const info = await transporter.sendMail({
-            from: process.env.EMAIL_USER,
+        const data = await resend.emails.send({
+            from: "onboarding@resend.dev",
             to: process.env.EMAIL_USER,
-
             subject: "🚨 New Complaint Submitted",
 
             html: `
                 <h2>New Complaint Submitted</h2>
 
-                <p><b>Title:</b> ${issue.title}</p>
-                <p><b>Category:</b> ${issue.category}</p>
-                <p><b>Location:</b> ${issue.location}</p>
-                <p><b>Description:</b> ${issue.description}</p>
-                <p><b>User Email:</b> ${issue.userEmail}</p>
+                <p><strong>Title:</strong> ${issue.title}</p>
+                <p><strong>Category:</strong> ${issue.category}</p>
+                <p><strong>Location:</strong> ${issue.location}</p>
+                <p><strong>Description:</strong> ${issue.description}</p>
+                <p><strong>User Email:</strong> ${issue.userEmail}</p>
+
+                ${
+                    issue.image
+                        ? `<p><a href="${issue.image}">View Uploaded Image</a></p>`
+                        : ""
+                }
             `,
         });
 
-        console.log("✅ EMAIL SENT");
-        console.log(info);
+        console.log("✅ Email Sent");
+        console.log(data);
 
-    } catch (err) {
+    } catch (error) {
 
-        console.log("❌ EMAIL ERROR");
-        console.log(err);
+        console.log("❌ Email Error");
+        console.log(error);
 
     }
 };
