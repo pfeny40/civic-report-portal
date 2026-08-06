@@ -9,35 +9,26 @@ const router = express.Router();
 // ========================
 // Create New Issue
 // ========================
-router.put(
-    "/:id/status",
-    authMiddleware,
-    adminMiddleware,
-    async (req, res) => {
-        try {
-            const issue = await Issue.findByIdAndUpdate(
-                req.params.id,
-                { status: req.body.status },
-                { new: true }
-            );
+router.post("/", authMiddleware, upload.single("image"), async (req, res) => {
+    try {
+        const issue = await Issue.create({
+            title: req.body.title,
+            category: req.body.category,
+            location: req.body.location,
+            description: req.body.description,
+            userEmail: req.body.userEmail,
+            image: req.file ? req.file.filename : "",
+        });
 
-            if (!issue) {
-                return res.status(404).json({
-                    message: "Issue not found",
-                });
-            }
+        res.status(201).json(issue);
 
-            res.json(issue);
-
-        } catch (error) {
-            console.log(error);
-
-            res.status(500).json({
-                message: error.message,
-            });
-        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: error.message,
+        });
     }
-);
+});
 
 // ========================
 // Get Issues of Logged User
@@ -49,6 +40,7 @@ router.get("/user/:email", async (req, res) => {
         }).sort({ createdAt: -1 });
 
         res.json(issues);
+
     } catch (error) {
         res.status(500).json({
             message: error.message,
@@ -70,6 +62,7 @@ router.get("/:id", async (req, res) => {
         }
 
         res.json(issue);
+
     } catch (error) {
         res.status(500).json({
             message: error.message,
@@ -87,6 +80,7 @@ router.get("/", async (req, res) => {
         });
 
         res.json(issues);
+
     } catch (error) {
         res.status(500).json({
             message: error.message,
@@ -104,6 +98,7 @@ router.delete("/:id", authMiddleware, async (req, res) => {
         res.json({
             message: "Issue Deleted Successfully",
         });
+
     } catch (error) {
         res.status(500).json({
             message: error.message,
@@ -152,7 +147,17 @@ router.put(
     adminMiddleware,
     async (req, res) => {
         try {
-            const issue = await Issue.findById(req.params.id);
+
+            const issue = await Issue.findByIdAndUpdate(
+                req.params.id,
+                {
+                    status: req.body.status,
+                },
+                {
+                    new: true,
+                    runValidators: false,
+                }
+            );
 
             if (!issue) {
                 return res.status(404).json({
@@ -160,13 +165,11 @@ router.put(
                 });
             }
 
-            issue.status = req.body.status;
-
-            await issue.save();
-
             res.json(issue);
 
         } catch (error) {
+            console.log(error);
+
             res.status(500).json({
                 message: error.message,
             });
