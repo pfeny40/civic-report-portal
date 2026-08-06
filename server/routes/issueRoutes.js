@@ -31,12 +31,13 @@ router.post("/", authMiddleware, upload.single("image"), async (req, res) => {
         res.status(201).json(issue);
 
     } catch (error) {
-        console.error("========== ERROR ==========");
-        console.error("Message:", error.message);
-        console.error("Stack:", error.stack);
 
-        if (error.response) {
-            console.error("Cloudinary Response:", error.response);
+        console.log("========== FULL ERROR ==========");
+        console.log(error);
+
+        if (error.errors) {
+            console.log("Validation Errors:");
+            console.log(error.errors);
         }
 
         res.status(500).json({
