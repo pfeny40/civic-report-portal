@@ -3,6 +3,7 @@ import Issue from "../models/Issue.js";
 import upload from "../middleware/upload.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 import adminMiddleware from "../middleware/adminMiddleware.js";
+import sendComplaintEmail from "../utils/sendEmail.js";
 
 const router = express.Router();
 
@@ -23,6 +24,9 @@ router.post("/", authMiddleware, upload.single("image"), async (req, res) => {
             userEmail: req.body.userEmail,
             image: req.file ? req.file.path : "",
         });
+
+        // 📧 Send email to admin
+        await sendComplaintEmail(issue);
 
         res.status(201).json(issue);
 
