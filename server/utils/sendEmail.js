@@ -10,43 +10,33 @@ const transporter = nodemailer.createTransport({
 
 const sendComplaintEmail = async (issue) => {
     try {
-        console.log("Sending Email...");
-        await transporter.sendMail({
+
+        console.log("📧 Sending Email...");
+
+        const info = await transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: process.env.EMAIL_USER,
 
-            subject: "🚨 New Civic Complaint Submitted",
+            subject: "🚨 New Complaint Submitted",
 
             html: `
                 <h2>New Complaint Submitted</h2>
 
                 <p><b>Title:</b> ${issue.title}</p>
-
                 <p><b>Category:</b> ${issue.category}</p>
-
                 <p><b>Location:</b> ${issue.location}</p>
-
                 <p><b>Description:</b> ${issue.description}</p>
-
                 <p><b>User Email:</b> ${issue.userEmail}</p>
-
-                ${
-                    issue.image
-                        ? `<p><a href="${issue.image}">View Image</a></p>`
-                        : ""
-                }
-
-                <hr/>
-
-                <p>Please login to the Admin Panel.</p>
             `,
         });
 
-        console.log("✅ Email Sent Successfully");
+        console.log("✅ EMAIL SENT");
+        console.log(info);
 
-    } catch (error) {
+    } catch (err) {
 
-        console.log("❌ Email Error:", error.message);
+        console.log("❌ EMAIL ERROR");
+        console.log(err);
 
     }
 };
