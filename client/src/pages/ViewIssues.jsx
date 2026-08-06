@@ -44,15 +44,11 @@ function ViewIssues() {
     };
 
     const updateStatus = async (id, status) => {
-
-        console.log("TOKEN =", localStorage.getItem("token"));
-
         try {
-            await axios.put(
+
+            const res = await axios.put(
                 `https://amiable-luck-production-e7d8.up.railway.app/api/issues/${id}/status`,
-                {
-                    status,
-                },
+                { status },
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -60,12 +56,17 @@ function ViewIssues() {
                 }
             );
 
+            console.log("SUCCESS =", res.data);
+
             toast.success("Status Updated!");
             fetchIssues();
 
         } catch (error) {
-            console.log(error);
-            toast.error("Failed to update status");
+
+            console.log("ERROR =", error.response);
+
+            toast.error(error.response?.data?.message || "Failed");
+
         }
     };
 
