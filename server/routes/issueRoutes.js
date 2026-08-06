@@ -14,27 +14,30 @@ router.put(
     authMiddleware,
     adminMiddleware,
     async (req, res) => {
-
-        console.log("🔥 STATUS ROUTE HIT");
-        console.log("REQ.USER =", req.user);
-
         try {
-            const issue = await Issue.create({
-                title: req.body.title,
-                category: req.body.category,
-                location: req.body.location,
-                description: req.body.description,
-                userEmail: req.body.userEmail,
-                image: req.file ? req.file.filename : "",
-            });
+            const issue = await Issue.findByIdAndUpdate(
+                req.params.id,
+                { status: req.body.status },
+                { new: true }
+            );
 
-            res.status(201).json(issue);
+            if (!issue) {
+                return res.status(404).json({
+                    message: "Issue not found",
+                });
+            }
+
+            res.json(issue);
+
         } catch (error) {
+            console.log(error);
+
             res.status(500).json({
                 message: error.message,
             });
         }
-    });
+    }
+);
 
 // ========================
 // Get Issues of Logged User
