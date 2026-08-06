@@ -7,6 +7,10 @@ function AdminDashboard() {
     const [search, setSearch] = useState("");
     const [categoryFilter, setCategoryFilter] = useState("All");
 
+    const [statusFilter, setStatusFilter] = useState("All");
+    const [sortOrder, setSortOrder] = useState("Newest");
+    const [selectedIssue, setSelectedIssue] = useState(null);
+
     useEffect(() => {
         fetchIssues();
     }, []);
@@ -104,6 +108,36 @@ function AdminDashboard() {
                     </div>
                 </div>
 
+                <div className="row mb-4">
+
+                    <div className="col-md-6">
+                        <select
+                            className="form-select"
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                        >
+                            <option value="All">All Status</option>
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Resolved">Resolved</option>
+                        </select>
+                    </div>
+
+                    <div className="col-md-6">
+                        <select
+                            className="form-select"
+                            value={sortOrder}
+                            onChange={(e) => setSortOrder(e.target.value)}
+                        >
+                            <option value="Newest">Newest First</option>
+                            <option value="Oldest">Oldest First</option>
+                        </select>
+                    </div>
+
+                </div>
+
+
+
             </div>
             <input
                 type="text"
@@ -145,6 +179,16 @@ function AdminDashboard() {
                                 ? true
                                 : issue.category === categoryFilter
                         )
+                        .filter((issue) =>
+                            statusFilter === "All"
+                                ? true
+                                : issue.status === statusFilter
+                        )
+                        .sort((a, b) =>
+                            sortOrder === "Newest"
+                                ? new Date(b.createdAt) - new Date(a.createdAt)
+                                : new Date(a.createdAt) - new Date(b.createdAt)
+                        )
                         .map((issue) => (
                             <tr key={issue._id}>
                                 <td>{issue.title}</td>
@@ -163,6 +207,17 @@ function AdminDashboard() {
                                     </span>
                                 </td>
                                 <td>
+                                    <button
+                                        className="btn btn-info btn-sm mb-2 w-100"
+                                        onClick={() => {
+                                            console.log("Clicked");
+                                            console.log(issue);
+                                            setSelectedIssue(issue);
+                                        }}
+                                    >
+                                        👁 View Details
+                                    </button>
+
                                     <select
                                         className="form-select"
                                         value={issue.status}
@@ -186,6 +241,59 @@ function AdminDashboard() {
                         ))}
                 </tbody>
             </table>
+            {selectedIssue && (
+                <div
+                    className="modal d-block"
+                    style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+                >
+                    <div className="modal-dialog modal-lg">
+                        <div className="modal-content">
+
+                            <div className="modal-header">
+                                <h5 className="modal-title">
+                                    Complaint Details
+                                </h5>
+
+                                <button
+                                    className="btn-close"
+                                    onClick={() => setSelectedIssue(null)}
+                                ></button>
+                            </div>
+
+                            <div className="modal-body">
+
+                                <p><strong>Title:</strong> {selectedIssue.title}</p>
+
+                                <p><strong>Category:</strong> {selectedIssue.category}</p>
+
+                                <p><strong>Location:</strong> {selectedIssue.location}</p>
+
+                                <p><strong>Description:</strong> {selectedIssue.description}</p>
+
+                                <p><strong>User Email:</strong> {selectedIssue.userEmail}</p>
+
+                                <p><strong>Status:</strong> {selectedIssue.status}</p>
+
+                                <p>
+                                    <strong>Date:</strong>{" "}
+                                    {new Date(selectedIssue.createdAt).toLocaleString()}
+                                </p>
+
+                                {selectedIssue.image && (
+                                    <img
+                                        src={selectedIssue.image}
+                                        alt="Complaint"
+                                        className="img-fluid rounded mt-3"
+                                    />
+                                )}
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }

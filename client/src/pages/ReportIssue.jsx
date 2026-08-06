@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import emailjs from "@emailjs/browser";
 
 function ReportIssue() {
     const [formData, setFormData] = useState({
@@ -31,7 +32,11 @@ function ReportIssue() {
             data.append("description", formData.description);
             data.append("image", image);
             data.append("userEmail", JSON.parse(localStorage.getItem("user")).email);
-            console.log("TOKEN:", localStorage.getItem("token"));
+            console.log("Category =", formData.category);
+
+            for (let pair of data.entries()) {
+                console.log(pair[0], pair[1]);
+            }
             const response = await axios.post(
                 "https://amiable-luck-production-e7d8.up.railway.app/api/issues",
                 data,
@@ -41,6 +46,22 @@ function ReportIssue() {
                     },
                 }
             );
+
+            await emailjs.send(
+                "service_29dmuol",
+                "template_x1sfgum",
+                {
+                    name: "Civic Report Portal",
+                    title: formData.title,
+                    category: formData.category,
+                    location: formData.location,
+                    description: formData.description,
+                    user_email: JSON.parse(localStorage.getItem("user")).email,
+                    email: JSON.parse(localStorage.getItem("user")).email,
+                },
+                "raw8DD8j_43-Ajqhp"
+            );
+
             toast.success("Complaint Submitted Successfully!");
             setFormData({
                 title: "",

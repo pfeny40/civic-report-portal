@@ -8,6 +8,7 @@ function MyComplaints() {
     const [issues, setIssues] = useState([]);
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("All");
+    
 
     useEffect(() => {
         fetchMyComplaints();
