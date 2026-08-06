@@ -11,6 +11,10 @@ const router = express.Router();
 // ========================
 router.post("/", authMiddleware, upload.single("image"), async (req, res) => {
     try {
+        console.log("===== CREATE ISSUE =====");
+        console.log("BODY:", req.body);
+        console.log("FILE:", req.file);
+
         const issue = await Issue.create({
             title: req.body.title,
             category: req.body.category,
@@ -23,7 +27,14 @@ router.post("/", authMiddleware, upload.single("image"), async (req, res) => {
         res.status(201).json(issue);
 
     } catch (error) {
-        console.log(error);
+        console.error("========== ERROR ==========");
+        console.error("Message:", error.message);
+        console.error("Stack:", error.stack);
+
+        if (error.response) {
+            console.error("Cloudinary Response:", error.response);
+        }
+
         res.status(500).json({
             message: error.message,
         });

@@ -6,4 +6,8 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+cloudinary.api.ping()
+    .then(result => console.log("Cloudinary OK:", result))
+    .catch(err => console.log("Cloudinary Error:", err));
+
 export default cloudinary;
