@@ -10,6 +10,7 @@ const transporter = nodemailer.createTransport({
 
 const sendComplaintEmail = async (issue) => {
     try {
+        console.log("Sending Email...");
         await transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: process.env.EMAIL_USER,

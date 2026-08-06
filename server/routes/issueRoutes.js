@@ -26,7 +26,7 @@ router.post("/", authMiddleware, upload.single("image"), async (req, res) => {
         });
 
         // 📧 Send email to admin
-        await sendComplaintEmail(issue);
+        sendComplaintEmail(issue);
 
         res.status(201).json(issue);
 
