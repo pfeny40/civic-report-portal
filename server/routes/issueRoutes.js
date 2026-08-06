@@ -9,28 +9,32 @@ const router = express.Router();
 // ========================
 // Create New Issue
 // ========================
-router.post("/", authMiddleware, upload.single("image"), async (req, res) => {
-    console.log("BODY:", req.body);
-    console.log("FILE:", req.file);
-    console.log("HEADERS:", req.headers["content-type"]);
+router.put(
+    "/:id/status",
+    authMiddleware,
+    adminMiddleware,
+    async (req, res) => {
 
-    try {
-        const issue = await Issue.create({
-            title: req.body.title,
-            category: req.body.category,
-            location: req.body.location,
-            description: req.body.description,
-            userEmail: req.body.userEmail,
-            image: req.file ? req.file.filename : "",
-        });
+        console.log("🔥 STATUS ROUTE HIT");
+        console.log("REQ.USER =", req.user);
 
-        res.status(201).json(issue);
-    } catch (error) {
-        res.status(500).json({
-            message: error.message,
-        });
-    }
-});
+        try {
+            const issue = await Issue.create({
+                title: req.body.title,
+                category: req.body.category,
+                location: req.body.location,
+                description: req.body.description,
+                userEmail: req.body.userEmail,
+                image: req.file ? req.file.filename : "",
+            });
+
+            res.status(201).json(issue);
+        } catch (error) {
+            res.status(500).json({
+                message: error.message,
+            });
+        }
+    });
 
 // ========================
 // Get Issues of Logged User
