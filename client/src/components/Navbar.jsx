@@ -26,7 +26,7 @@ function Navbar() {
     };
 
     return (
-        <nav>
+        <nav style={{position: "sticky", zIndex: 1050}}>
             <div className="logo">
                 Civic Report Portal
             </div>

@@ -8,7 +8,22 @@ function MyComplaints() {
     const [issues, setIssues] = useState([]);
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("All");
-    
+
+    const total = issues.length;
+
+    const pending = issues.filter(
+        (issue) => issue.status === "Pending"
+    ).length;
+
+    const inProgress = issues.filter(
+        (issue) => issue.status === "In Progress"
+    ).length;
+
+    const resolved = issues.filter(
+        (issue) => issue.status === "Resolved"
+    ).length;
+
+
 
     useEffect(() => {
         fetchMyComplaints();
@@ -49,15 +64,48 @@ function MyComplaints() {
     return (
         <div className="container mt-5">
             <h2 className="text-center mb-4">My Complaints</h2>
+
+            <div className="row mt-4 mb-5">
+
+                <div className="col-md-3">
+                    <div className="card shadow text-center p-3 bg-primary text-white">
+                        <h5>Total</h5>
+                        <h2>{total}</h2>
+                    </div>
+                </div>
+
+                <div className="col-md-3">
+                    <div className="card shadow text-center p-3 bg-warning">
+                        <h5>Pending</h5>
+                        <h2>{pending}</h2>
+                    </div>
+                </div>
+
+                <div className="col-md-3">
+                    <div className="card shadow text-center p-3 bg-info text-white">
+                        <h5>In Progress</h5>
+                        <h2>{inProgress}</h2>
+                    </div>
+                </div>
+
+                <div className="col-md-3">
+                    <div className="card shadow text-center p-3 bg-success text-white">
+                        <h5>Resolved</h5>
+                        <h2>{resolved}</h2>
+                    </div>
+                </div>
+
+            </div>
+
             <input
                 type="text"
-                className="form-control mb-4"
+                className="form-control mb-4 shadow-sm"
                 placeholder="🔍 Search Complaint..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
             />
             <select
-                className="form-select mb-4"
+                className="form-select mb-4 shadow-sm"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
             >

@@ -36,3 +36,7 @@
 .hero button:hover{
     background: #084298;
 }
+
+.dashboard-filters{
+    margin-top: 30px;
+}

@@ -75,9 +75,12 @@ function AdminDashboard() {
     };
     return (
         <div className="container mt-5">
+
             <h2 className="text-center mb-4">
                 👨‍💼 Admin Dashboard
             </h2>
+
+            {/* Statistics Cards */}
             <div className="row mb-4">
 
                 <div className="col-md-3">
@@ -108,37 +111,9 @@ function AdminDashboard() {
                     </div>
                 </div>
 
-                <div className="row mb-4">
-
-                    <div className="col-md-6">
-                        <select
-                            className="form-select"
-                            value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value)}
-                        >
-                            <option value="All">All Status</option>
-                            <option value="Pending">Pending</option>
-                            <option value="In Progress">In Progress</option>
-                            <option value="Resolved">Resolved</option>
-                        </select>
-                    </div>
-
-                    <div className="col-md-6">
-                        <select
-                            className="form-select"
-                            value={sortOrder}
-                            onChange={(e) => setSortOrder(e.target.value)}
-                        >
-                            <option value="Newest">Newest First</option>
-                            <option value="Oldest">Oldest First</option>
-                        </select>
-                    </div>
-
-                </div>
-
-
-
             </div>
+
+            {/* Search */}
             <input
                 type="text"
                 className="form-control mb-4"
@@ -146,6 +121,8 @@ function AdminDashboard() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
             />
+
+            {/* Category Filter */}
             <select
                 className="form-select mb-4"
                 value={categoryFilter}
@@ -179,16 +156,7 @@ function AdminDashboard() {
                                 ? true
                                 : issue.category === categoryFilter
                         )
-                        .filter((issue) =>
-                            statusFilter === "All"
-                                ? true
-                                : issue.status === statusFilter
-                        )
-                        .sort((a, b) =>
-                            sortOrder === "Newest"
-                                ? new Date(b.createdAt) - new Date(a.createdAt)
-                                : new Date(a.createdAt) - new Date(b.createdAt)
-                        )
+                    
                         .map((issue) => (
                             <tr key={issue._id}>
                                 <td>{issue.title}</td>
