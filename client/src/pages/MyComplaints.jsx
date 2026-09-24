@@ -30,11 +30,26 @@ function MyComplaints() {
     }, []);
     const fetchMyComplaints = async () => {
         try {
-            const user = JSON.parse(localStorage.getItem("user"));
-            const res = await axios.get(`https://amiable-luck-production-e7d8.up.railway.app/api/issues/user/${user.email}`);
-            setIssues(res.data);
+            const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+            const res = await axios.get(
+                "https://civic-report-portal-api.onrender.com/api/issues",
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
+            );
+
+            // Only logged-in user's complaints
+            const myIssues = res.data.filter(
+                (issue) => issue.userEmail === user.email
+            );
+
+            setIssues(myIssues);
+
         } catch (error) {
-            console.log(error);
+            console.log("MY COMPLAINTS ERROR =", error.response || error);
         }
     };
 
@@ -45,7 +60,7 @@ function MyComplaints() {
 
         try {
             await axios.delete(
-                `https://amiable-luck-production-e7d8.up.railway.app/api/issues/${id}`,
+                `https://civic-report-portal-api.onrender.com/api/auth/login/${id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,

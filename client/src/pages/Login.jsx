@@ -21,13 +21,21 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post("https://amiable-luck-production-e7d8.up.railway.app/api/auth/login", formData);
+            const res = await axios.post("https://civic-report-portal-api.onrender.com/api/auth/login", formData);
             localStorage.setItem("token", res.data.token);
-            localStorage.setItem("user",JSON.stringify(res.data.user));
+            localStorage.setItem("user", JSON.stringify(res.data.user));
             toast.success("Login Successfully!");
             navigate("/dashboard");
         } catch (error) {
-            toast.error(error.response?.data?.message || "Login Failed");
+            console.log("LOGIN ERROR:", error);
+            console.log("STATUS:", error.response?.status);
+            console.log("DATA:", error.response?.data);
+
+            toast.error(
+                error.response?.data?.message ||
+                error.message ||
+                "Login Failed"
+            );
         }
     };
     return (

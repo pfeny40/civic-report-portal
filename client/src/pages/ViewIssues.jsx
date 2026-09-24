@@ -19,7 +19,13 @@ function ViewIssues() {
 
     const fetchIssues = async () => {
         try {
-            const res = await axios.get("https://amiable-luck-production-e7d8.up.railway.app/api/issues");
+            const res = await axios.get("https://civic-report-portal-api.onrender.com/api/issues",
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
+            );
             setIssues(res.data);
         } catch (error) {
             console.log(error);
@@ -29,7 +35,7 @@ function ViewIssues() {
     const deleteIssue = async (id) => {
         try {
             await axios.delete(
-                `https://amiable-luck-production-e7d8.up.railway.app/api/issues/${id}`,
+                `https://civic-report-portal-api.onrender.com/api/issues/${id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -47,7 +53,7 @@ function ViewIssues() {
         try {
 
             const res = await axios.put(
-                `https://amiable-luck-production-e7d8.up.railway.app/api/issues/${id}/status`,
+                `https://civic-report-portal-api.onrender.com/api/issues/${id}/status`,
                 { status },
                 {
                     headers: {

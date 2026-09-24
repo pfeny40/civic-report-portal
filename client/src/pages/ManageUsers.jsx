@@ -8,7 +8,7 @@ function ManageUsers() {
     const fetchUsers = async () => {
         try {
             const res = await axios.get(
-                "https://amiable-luck-production-e7d8.up.railway.app/api/users",
+                "https://civic-report-portal-api.onrender.com/api/users",
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -18,8 +18,10 @@ function ManageUsers() {
 
             setUsers(res.data);
         } catch (error) {
-            console.log(error);
-            toast.error("Failed to load users");
+            console.log("USERS ERROR =", error.response || error);
+            toast.error(
+                error.response?.data?.message || "Failed to load users"
+            );
         }
     };
 
@@ -32,7 +34,7 @@ function ManageUsers() {
 
         try {
             await axios.delete(
-                `https://amiable-luck-production-e7d8.up.railway.app/api/users/${id}`,
+                `https://civic-report-portal-api.onrender.com/api/auth/login/${id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -72,11 +74,10 @@ function ManageUsers() {
                                 <td>{user.email}</td>
                                 <td>
                                     <span
-                                        className={`badge ${
-                                            user.role === "admin"
+                                        className={`badge ${user.role === "admin"
                                                 ? "bg-danger"
                                                 : "bg-primary"
-                                        }`}
+                                            }`}
                                     >
                                         {user.role}
                                     </span>

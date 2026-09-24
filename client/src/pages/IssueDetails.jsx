@@ -12,7 +12,7 @@ function IssueDetails() {
 
     const fetchIssue = async () => {
         try {
-            const res = await axios.get(`https://amiable-luck-production-e7d8.up.railway.app/api/issues/${id}`);
+            const res = await axios.get(`https://civic-report-portal-api.onrender.com/api/auth/login/${id}`);
             setIssue(res.data);
         } catch (error) {
             console.log(error);

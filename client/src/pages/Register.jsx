@@ -17,17 +17,31 @@ function Register() {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
-            const res = await axios.post("https://amiable-luck-production-e7d8.up.railway.app/api/auth/register", formData);
+            const res = await axios.post(
+                "https://civic-report-portal-api.onrender.com/api/auth/register",
+                formData
+            );
+
             toast.success(res.data.message);
+
             navigate("/login");
+
             setFormData({
                 name: "",
                 email: "",
                 password: "",
             });
         } catch (error) {
-            toast.error(error.response?.data?.message || "registration Failed");
+            console.log(
+                "REGISTER ERROR =",
+                JSON.stringify(error.response?.data, null, 2)
+            );
+
+            toast.error(
+                error.response?.data?.message || "Registration Failed"
+            );
         }
     };
     return (
@@ -38,28 +52,28 @@ function Register() {
                         <h2 className="text-center mb-4">Create Account</h2>
                         <form onSubmit={handleSubmit}>
                             <input
-                             type="text" 
-                             name="name"
-                             value={formData.name}
-                             onChange={handleChange}
-                             className="form-control mb-3" 
-                             placeholder="Full Name" 
-                             />
-                            <input 
-                            type="email" 
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            className="form-control mb-3" 
-                            placeholder="Email" 
+                                type="text"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                className="form-control mb-3"
+                                placeholder="Full Name"
                             />
-                            <input 
-                            type="password" 
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            className="form-control mb-3" 
-                            placeholder="Password" 
+                            <input
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                className="form-control mb-3"
+                                placeholder="Email"
+                            />
+                            <input
+                                type="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                className="form-control mb-3"
+                                placeholder="Password"
                             />
 
                             <button className="btn btn-success">Register</button>

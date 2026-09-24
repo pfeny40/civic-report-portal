@@ -20,7 +20,13 @@ function Dashboard() {
 
     const fetchIssues = async () => {
         try {
-            const res = await axios.get("https://amiable-luck-production-e7d8.up.railway.app/api/issues");
+            const res = await axios.get("https://civic-report-portal-api.onrender.com/api/issues",
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
+            );
             setIssues(res.data);
         } catch (error) {
             console.log(error);
@@ -128,8 +134,8 @@ function Dashboard() {
                                     <td>
                                         <span
                                             className={`badge ${issue.status === "Resolved"
-                                                    ? "bg-success"
-                                                    : "bg-warning text-dark"
+                                                ? "bg-success"
+                                                : "bg-warning text-dark"
                                                 }`}
                                         >
                                             {issue.status}

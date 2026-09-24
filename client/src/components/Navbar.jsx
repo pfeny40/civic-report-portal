@@ -26,7 +26,7 @@ function Navbar() {
     };
 
     return (
-        <nav style={{position: "sticky", zIndex: 1050}}>
+        <nav style={{ position: "sticky", zIndex: 1050 }}>
             <div className="logo">
                 Civic Report Portal
             </div>
@@ -44,11 +44,14 @@ function Navbar() {
                 {isLoggedIn ? (
                     <>
 
-                        <Link to="/dashboard">Dashboard</Link>
+                        {user?.role === "admin" && (
+                            <>
+                                <Link to="/dashboard">Dashboard</Link>
+                                <Link to="/issues">View Issues</Link>
+                            </>
+                        )}
 
                         <Link to="/report">Report Issue</Link>
-
-                        <Link to="/issues">View Issues</Link>
 
                         <Link to="/my-complaints">My Complaints</Link>
 

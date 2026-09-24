@@ -19,7 +19,7 @@ function Profile() {
     const fetchStats = async (email) => {
         try {
             const res = await axios.get(
-                `https://amiable-luck-production-e7d8.up.railway.app/api/issues/user/${email}`
+                `https://civic-report-portal-api.onrender.com/api/auth/login/${email}`
             );
 
             setTotal(res.data.length);

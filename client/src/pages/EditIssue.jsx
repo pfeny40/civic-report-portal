@@ -23,7 +23,7 @@ function EditIssue() {
         e.preventDefault();
         try {
             await axios.put(
-                `https://amiable-luck-production-e7d8.up.railway.app/api/issues/${id}`,
+                `https://civic-report-portal-api.onrender.com/api/auth/login/${id}`,
                 formData,
                 {
                     headers: {
@@ -46,7 +46,7 @@ function EditIssue() {
     }, []);
     const fetchIssue = async () => {
         try {
-            const res = await axios.get(`https://amiable-luck-production-e7d8.up.railway.app/api/issues/${id}`);
+            const res = await axios.get(`https://civic-report-portal-api.onrender.com/api/auth/login/${id}`);
             setFormData(res.data);
         } catch (error) {
             console.log(error);

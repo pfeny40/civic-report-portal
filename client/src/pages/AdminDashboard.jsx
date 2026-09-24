@@ -16,10 +16,18 @@ function AdminDashboard() {
     }, []);
     const fetchIssues = async () => {
         try {
-            const res = await axios.get("https://amiable-luck-production-e7d8.up.railway.app/api/issues");
+            const res = await axios.get(
+                "https://civic-report-portal-api.onrender.com/api/issues",
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
+            );
+
             setIssues(res.data);
         } catch (error) {
-            console.log(error);
+            console.log("ADMIN PANEL ERROR =", error.response || error);
         }
     };
     const total = issues.length;
@@ -39,7 +47,7 @@ function AdminDashboard() {
             const token = localStorage.getItem("token");
 
             await axios.put(
-                `https://amiable-luck-production-e7d8.up.railway.app/api/issues/${id}/status`,
+                `https://civic-report-portal-api.onrender.com/api/issues/${id}/status`,
                 { status },
                 {
                     headers: {
@@ -63,14 +71,29 @@ function AdminDashboard() {
         }
 
         try {
-            await axios.delete(`https://amiable-luck-production-e7d8.up.railway.app/api/issues/${id}`);
+            const token = localStorage.getItem("token");
+
+            await axios.delete(
+                `https://civic-report-portal-api.onrender.com/api/issues/${id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
 
             toast.success("Complaint Deleted Successfully!");
-
             fetchIssues();
+
         } catch (error) {
-            console.log(error);
-            toast.error("Delete Failed");
+            console.log(
+                "DELETE ERROR =",
+                error.response?.data || error
+            );
+
+            toast.error(
+                error.response?.data?.message || "Delete Failed"
+            );
         }
     };
     return (
@@ -156,7 +179,7 @@ function AdminDashboard() {
                                 ? true
                                 : issue.category === categoryFilter
                         )
-                    
+
                         .map((issue) => (
                             <tr key={issue._id}>
                                 <td>{issue.title}</td>
